@@ -49,14 +49,19 @@ class ChunkStats:
 
 
 class Cleaner:
-        def __init__(self, namespace: str) -> None:
-                self.namespace = namespace
+        def __init__(self, namespaces: str | list[str]) -> None:
+                if isinstance(namespaces, str):
+                        self._namespaces = [namespaces]
+                else:
+                        self._namespaces = list(namespaces)
 
         def _is_mod(self, value: str) -> bool:
-                return str(value).startswith(f"{self.namespace}")
+                return any (
+                        str(value).startswith(f"{namespace}:") for namespace in self._namespaces
+                )
 
         def _has_mod_key(self, nbt_property: str) -> bool:
-                return self.namespace in str(nbt_property)
+                return any(namespace in str(nbt_property) for namespace in self._namespaces)
 
         def clean_items(self, container) -> bool:
                 modified = False
