@@ -3,24 +3,32 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "Modded World Stripper"
+name = "modded-world-stripper"
 description = "A script to remove bugged mods from world saves to keep them playable."
 author = [
         {name = "Soleil Fenley"}
 ]
 readme = "README.md"
 version = "2026.1.0"
-dynamic = ["version"]
 requires-python = ">= 3.14"
 dependencies = [
-        nbtlib>=2.0.4
-        questionary>=2.1.1
-        typing_extensions>=4.16.0
-        tzlocal>=5.4.4
+        "nbtlib >= 2.0.4",
+        "questionary >= 2.1.1",
+        "typing_extensions >= 4.16.0",
+        "tzlocal >= 5.4.4"
 ]
 license = "GPL-3.0"
-license-files = "LICEN[CS]E*"
+license-files = ["LICENSE"]
 keywords = ["minecraft", "world", "corrupted", "fixer", "neoforge", "supplementaries", "modded", "nbt"]
 
 [project.urls]
 Repsoitory = "https://github.com/soleilfenley/modded-world-stripper.git"
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "strip-mod.py",
+    "src/anvil.py",
+    "src/cleaner.py",
+    "src/components.py",
+    "src/addons/voxy.py",
+]
