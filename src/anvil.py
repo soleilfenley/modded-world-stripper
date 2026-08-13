@@ -35,11 +35,10 @@ class RegionFile:
                 if offset == 0 or sectors == 0:
                         return None
                 with open(self.path, "rb") as file:
+                        file.seek(offset * self.SECTOR)
                         length = struct.unpack(">I", file.read(4))[0]
                         comp = file.read(1)[0]
                         data = file.read(length - 1)
-
-                        file.seek(offset * self.SECTOR)
 
                 if comp == 2:
                         return zlib.decompress(data)
