@@ -4,7 +4,7 @@ from pathlib import Path
 
 def clean_voxy_cache(world: Path, *, dry: bool = False) -> None:
         voxy_path = world / "voxy"
-        if not vp.is_dir():
+        if not voxy_path.is_dir():
                 return
 
         size_mb = sum(
