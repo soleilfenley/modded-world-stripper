@@ -15,6 +15,10 @@ class RegionFile:
                 self._timestamps: list[int] = []
 
         def read_header(self) -> None:
+                if self.path.stat().st_size < self.HEADER:
+                        self._locations = [(0, 0)] * 1024
+                        self._timestamps = [0] * 1024
+                        return
                 with open(self.path, "rb") as file:
                         locations = []
                         for _ in range(1024):
