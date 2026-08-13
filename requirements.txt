@@ -1,0 +1,4 @@
+nbtlib==2.0.4
+questionary==2.1.1
+typing_extensions==4.16.0
+tzlocal==5.4.4
