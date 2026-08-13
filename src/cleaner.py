@@ -1,9 +1,10 @@
 import logging
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
-import shutil
 
 import nbtlib
+from typing_extensions import Self
 
 from src.components import read_nbt, write_nbt
 
@@ -27,7 +28,7 @@ class ChunkStats:
                         attachments=self.attachments + other.attachments,
                 )
 
-        def __iadd__(self, other: "ChunkStats") -> "ChunkStats":
+        def __iadd__(self, other: "ChunkStats") -> Self:
                 self.blocks += other.blocks
                 self.block_entities += other.block_entities
                 self.entities += other.entities
@@ -98,12 +99,14 @@ class Cleaner:
                                                         "Name", ""
                                                 )
                                         ):
-                                                block_state["palette"][index] = nbtlib.Compound(
-                                                        {
-                                                                "Name": nbtlib.String(
-                                                                        "minecraft:air"
-                                                                )
-                                                        }
+                                                block_state["palette"][index] = (
+                                                        nbtlib.Compound(
+                                                                {
+                                                                        "Name": nbtlib.String(
+                                                                                "minecraft:air"
+                                                                        )
+                                                                }
+                                                        )
                                                 )
                                                 stats.blocks += 1
 
@@ -149,7 +152,7 @@ class Cleaner:
 
                 data = read_nbt(level_path)
                 player = data["Data"]["Player"]
-                attachments = player.get("neoforge:attachments",{})
+                attachments = player.get("neoforge:attachments", {})
 
                 count = 0
                 for nbt_property in list(attachments):
@@ -166,7 +169,9 @@ class Cleaner:
 
                 return count
 
-        def clean_playerdata(self, world: Path, *, dry: bool = False) -> tuple[int, int]:
+        def clean_playerdata(
+                self, world: Path, *, dry: bool = False
+        ) -> tuple[int, int]:
                 playerdata = world / "playerdata"
                 if not playerdata.is_dir():
                         print("  playerdata/ not found, skipping.")
@@ -179,8 +184,6 @@ class Cleaner:
                         if ".bak" in uuid_path.name or "_old" in uuid_path.name:
                                 continue
 
-                        with open(uuid_path, "rb") as file:
-                                raw = file.read()
                         data = read_nbt(uuid_path)
                         attachments = data.get("neoforge:attachments") or {}
 
@@ -193,9 +196,11 @@ class Cleaner:
                         if count > 0:
                                 total += count
                                 files += 1
-                                print(f"  {uuid_path.name} {count} attachment(s) stripped")
+                                print(
+                                        f"  {uuid_path.name} {count} attachment(s) stripped"
+                                )
                                 if not dry:
                                         shutil.copy2(uuid_path, str(uuid_path) + ".bak")
                                         write_nbt(uuid_path, data)
-                
+
                 return total, files
