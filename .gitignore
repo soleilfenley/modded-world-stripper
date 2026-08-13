@@ -216,3 +216,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Skip pushing world folders to origin
+world/
+!src/
+!tests/
