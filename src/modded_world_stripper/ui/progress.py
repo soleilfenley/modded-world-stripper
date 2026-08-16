@@ -61,5 +61,5 @@ class ProgressBar:
         def _close(self) -> None:
                 if self._active:
                         _ = sys.stdout.write("\n")
-                        sys.stdout.flush()
+                        _ = sys.stdout.flush()
                         self._active = False
