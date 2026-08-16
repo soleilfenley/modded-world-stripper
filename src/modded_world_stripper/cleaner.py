@@ -18,6 +18,7 @@ class ChunkStats:
         entities: int = 0
         items: int = 0
         attachments: int = 0
+        structures: int = 0
 
         def __add__(self, other: ChunkStats) -> ChunkStats:
                 return ChunkStats(
@@ -26,6 +27,7 @@ class ChunkStats:
                         entities=self.entities + other.entities,
                         items=self.items + other.items,
                         attachments=self.attachments + other.attachments,
+                        structures=self.structures + other.structures
                 )
 
         def __iadd__(self, other: ChunkStats) -> Self:
@@ -34,6 +36,7 @@ class ChunkStats:
                 self.entities += other.entities
                 self.items += other.items
                 self.attachments += other.attachments
+                self.structures += other.structures
                 return self
 
         def __bool__(self) -> bool:
@@ -44,6 +47,7 @@ class ChunkStats:
                                 self.entities,
                                 self.items,
                                 self.attachments,
+                                self.structures
                         )
                 )
 
@@ -101,6 +105,21 @@ class Cleaner:
                                 modified = True
                 return modified
 
+        def clean_structures(self, chunk: nbtlib.Compound) -> int:
+                count = 0
+                structures = chunk.get("structures")
+                if not isinstance(structures, nbtlib.Compound):
+                        return count
+                for nbt_property in ("starts", "References"):
+                        section = structures.get(nbt_property)
+                        if not isinstance(section, nbtlib.Compound):
+                                continue
+                        for structure_id in list(section):
+                                if self._is_mod(str(structure_id)):
+                                        del section[structure_id]
+                                        count += 1
+                return count
+                
         def strip_attachments(self, compound: nbtlib.Compound) -> int:
                 count = 0
                 for nbt_property in list(compound):
@@ -191,6 +210,8 @@ class Cleaner:
                                         del entities[index]
                                         stats.entities += 1
 
+                stats.structures += self.clean_structures(chunk)
+
                 stats.attachments += self.strip_attachments(chunk)
 
                 return stats
@@ -227,9 +248,7 @@ class Cleaner:
 
                 return count
 
-        def clean_playerdata(
-                self, world: Path, *, dry: bool = False
-        ) -> tuple[int, int]:
+        def clean_playerdata(self, world: Path, *, dry: bool = False) -> tuple[int, int]:
                 playerdata = world / "playerdata"
                 if not playerdata.is_dir():
                         print("  playerdata/ not found, skipping.")

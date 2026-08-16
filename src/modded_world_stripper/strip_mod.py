@@ -75,7 +75,7 @@ def process_dimension(
                                 f"  {mca.name}: "
                                 + f"blocks={file_stats.blocks} block_entities={file_stats.block_entities} "
                                 + f"entities={file_stats.entities} items={file_stats.items} "
-                                + f"attachments={file_stats.attachments}"
+                                + f"attachments={file_stats.attachments} structures={file_stats.structures}"
                         )
                         dimension_stats += file_stats
 
@@ -89,7 +89,7 @@ def process_dimension(
                 f"\n  --- {dimension} total: "
                 + f"{dimension_stats.blocks} blocks, {dimension_stats.block_entities} block entities, "
                 + f"{dimension_stats.entities} entities, {dimension_stats.items} items, "
-                + f"{dimension_stats.attachments} attachments ---"
+                + f"{dimension_stats.attachments} attachments, {dimension_stats.structures} structures ---"
         )
 
         return dimension_stats
@@ -153,6 +153,7 @@ def main() -> None:
         print(f"  Blocks Entities:      {grand_total.block_entities}")
         print(f"         Entities:      {grand_total.entities}")
         print(f"            Items:      {grand_total.items}")
+        print(f"       Structures:      {grand_total.structures}")
         print(f"      Attachments:      {grand_total.attachments}")
         print(f"        level.dat:      {ld_count}")
         print(f"       playerdata:      {pd_total} attachments ({pd_files} files)")
