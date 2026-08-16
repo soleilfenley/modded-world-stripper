@@ -18,5 +18,5 @@ def clean_voxy_cache(world: Path, *, dry: bool = False) -> None:
                 backup_path = str(voxy_path) + ".bak"
                 if Path(backup_path).exists():
                         shutil.rmtree(backup_path)
-                shutil.move(str(voxy_path), backup_path)
+                _ = shutil.move(str(voxy_path), backup_path)
                 print("  voxy/ moved to voxy.bak/ (will regenerate on next launch)")

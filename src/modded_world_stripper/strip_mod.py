@@ -9,23 +9,22 @@ from pathlib import Path
 import nbtlib
 import tzlocal
 
-from src.addons.voxy import clean_voxy_cache
-from src.anvil import RegionFile
-from src.cleaner import ChunkStats, Cleaner
-from src.menu import select_mods_interaction
+from .addons.voxy import clean_voxy_cache
+from .anvil import RegionFile
+from .cleaner import ChunkStats, Cleaner
+from .menu import select_mods_interaction
 
 logger = logging.getLogger(__name__)
 
 
 def find_region_directories(world: Path) -> list[Path]:
-        directories = []
+        directories: list[Path] = []
         for dir in world.rglob("region"):
                 if dir.is_dir():
                         directories.append(dir)
         entities_path = world / "entities"
         if entities_path.is_dir():
                 directories.append(entities_path)
-
         return directories
 
 
@@ -33,7 +32,7 @@ def backup_world(world: Path) -> Path:
         timestamp = datetime.now(tzlocal.get_localzone()).strftime("%Y%m%d_%H%M%S")
         backup_path = world.parent / f"{world.name}_backup_{timestamp}"
         print(f"\nBackuing up to {backup_path}")
-        shutil.copytree(world, backup_path, symlinks=True)
+        _ = shutil.copytree(world, backup_path, symlinks=True)
         print("Backup complete.")
         return backup_path
 
@@ -74,9 +73,9 @@ def process_dimension(
                 if file_stats:
                         print(
                                 f"  {mca.name}: "
-                                f"blocks={file_stats.blocks} block_entities={file_stats.block_entities} "
-                                f"entities={file_stats.entities} items={file_stats.items} "
-                                f"attachments={file_stats.attachments}"
+                                + f"blocks={file_stats.blocks} block_entities={file_stats.block_entities} "
+                                + f"entities={file_stats.entities} items={file_stats.items} "
+                                + f"attachments={file_stats.attachments}"
                         )
                         dimension_stats += file_stats
 
@@ -88,9 +87,9 @@ def process_dimension(
 
         print(
                 f"\n  --- {dimension} total: "
-                f"{dimension_stats.blocks} blocks, {dimension_stats.block_entities} block entities, "
-                f"{dimension_stats.entities} entities, {dimension_stats.items} items, "
-                f"{dimension_stats.attachments} attachments ---"
+                + f"{dimension_stats.blocks} blocks, {dimension_stats.block_entities} block entities, "
+                + f"{dimension_stats.entities} entities, {dimension_stats.items} items, "
+                + f"{dimension_stats.attachments} attachments ---"
         )
 
         return dimension_stats
@@ -98,12 +97,12 @@ def process_dimension(
 
 def main() -> None:
         ap = argparse.ArgumentParser(description="Strip mod data from Minecraft worlds")
-        ap.add_argument("world", help="Path to world folder")
-        ap.add_argument(
+        _ = ap.add_argument("world", help="Path to world folder")
+        _ = ap.add_argument(
                 "-d", "--dry-run", action="store_true", help="Preview before running"
         )
-        ap.add_argument("--no-backup", action="store_true", help="Skip backup")
-        ap.add_argument(
+        _ = ap.add_argument("--no-backup", action="store_true", help="Skip backup")
+        _ = ap.add_argument(
                 "--no-voxy", action="store_true", help="Skip Voxy cache clearing"
         )
         args = ap.parse_args()
@@ -117,7 +116,7 @@ def main() -> None:
         if not regions:
                 print("No region/ folders found.")
                 sys.exit(1)
-        
+
         namespaces = select_mods_interaction()
 
         cleaner = Cleaner(namespaces=namespaces)
@@ -130,7 +129,7 @@ def main() -> None:
                 count = len(list(region_file.glob("*.mca")))
                 print(f"  {region_file.parent.name}/region  ({count} .mca)")
         if not args.dry_run and not args.no_backup:
-                backup_world(world)
+                _ = backup_world(world)
 
         print(f"\n{'=' * 60}")
         print("  Cleaning level.dat & playerdata...")
@@ -163,6 +162,7 @@ def main() -> None:
                 print("\n[DRY RUN] No changes made. Remove --dry-run to apply.")
         else:
                 print("\nDone. Test the world in Minecraft.")
+
 
 if __name__ == "__main__":
         main()

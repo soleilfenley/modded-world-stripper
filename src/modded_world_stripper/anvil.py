@@ -1,3 +1,8 @@
+# anvil.py
+# Derived from the "strip-mod" tool suite (Soleil Fenley, 2026).
+# Original: strip-mod/anvil.py — reused and extended for the oil-injector tool.
+# License: GPL-3.0
+
 import gzip
 import struct
 import zlib
@@ -6,11 +11,11 @@ from pathlib import Path
 
 
 class RegionFile:
-        SECTOR = 4096
-        HEADER = SECTOR * 2
+        SECTOR: int = 4096
+        HEADER: int = SECTOR * 2
 
         def __init__(self, path: Path):
-                self.path = path
+                self.path:Path = path
                 self._locations: list[tuple[int, int]] = []
                 self._timestamps: list[int] = []
 
@@ -20,7 +25,7 @@ class RegionFile:
                         self._timestamps = [0] * 1024
                         return
                 with open(self.path, "rb") as file:
-                        locations = []
+                        locations: list[tuple[int, int]] = []
                         for _ in range(1024):
                                 raw = file.read(4)
                                 locations.append(
@@ -39,7 +44,7 @@ class RegionFile:
                 if offset == 0 or sectors == 0:
                         return None
                 with open(self.path, "rb") as file:
-                        file.seek(offset * self.SECTOR)
+                        _ = file.seek(offset * self.SECTOR)
                         length = struct.unpack(">I", file.read(4))[0]
                         comp = file.read(1)[0]
                         data = file.read(length - 1)
@@ -69,7 +74,7 @@ class RegionFile:
                 for index in range(1024):
                         chunk_x, chunk_z = index % 32, index // 32
                         pos = (chunk_x, chunk_z)
-                        if pos in chunks and chunks[pos] is not None:
+                        if pos in chunks:
                                 compressed = zlib.compress(chunks[pos])
                                 payload = (
                                         struct.pack(">I", len(compressed) + 1)
@@ -91,6 +96,6 @@ class RegionFile:
                                 sector_data.extend(padded_payload)
                                 current_sector += alloc_sectors
                 with open(self.path, "wb") as file:
-                        file.write(location_table)
-                        file.write(timestamp_table)
-                        file.write(sector_data)
+                        _ = file.write(location_table)
+                        _ = file.write(timestamp_table)
+                        _ = file.write(sector_data)

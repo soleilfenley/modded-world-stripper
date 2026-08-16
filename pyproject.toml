@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "modded-world-stripper"
+name = "modded_world_stripper"
 description = "A script to remove bugged mods from world saves to keep them playable."
 author = [
         {name = "Soleil Fenley"}
@@ -25,10 +25,7 @@ keywords = ["minecraft", "world", "corrupted", "fixer", "neoforge", "supplementa
 Repsoitory = "https://github.com/soleilfenley/modded-world-stripper.git"
 
 [tool.hatch.build.targets.wheel]
-include = [
-    "strip-mod.py",
-    "src/anvil.py",
-    "src/cleaner.py",
-    "src/components.py",
-    "src/addons/voxy.py",
-]
+packages = ["src/modded_world_stripper"]
+
+[tool.basedpyright]
+stubPath = "stubs"

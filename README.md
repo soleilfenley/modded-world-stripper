@@ -5,7 +5,7 @@ Also, I'm not good at writing README's, bite me. It's 5am... T^T
 ## Usage/Installing
 1. Click the green button and select, Download ZIP. You can also clone the repository if you know `git`.
 2. Open the directory in Terminal/Command Prompt and run: `pip install .`
-3. Test the changes to your world with: `py strip-mod.py -d New World`
+3. Test the changes to your world with: `python -m modded_world_stripper.strip_mod .\world\ --no-backup`
 4. You'll be asked to add the mods you want to change, please list them like:
    ```
    ars_nouveau,supplementaries,create ...
