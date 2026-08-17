@@ -213,9 +213,8 @@ class Cleaner:
                 stats.structures += self.clean_structures(chunk)
 
                 stats.attachments += self.strip_attachments(chunk)
-
                 return stats
-
+                
         def clean_level_dat(self, world: Path, *, dry: bool = False) -> int:
                 level_path = world / "level.dat"
                 if not level_path.exists():
@@ -223,11 +222,12 @@ class Cleaner:
                         return 0
 
                 data = read_nbt(level_path)
-                data_compound = data["Data"]
+                data_compound = data.get("Data")
                 if not isinstance(data_compound, nbtlib.Compound):
                         return 0
-                player = data_compound["Player"]
+                player = data_compound.get("Player")
                 if not isinstance(player, nbtlib.Compound):
+                        print("  level.dat has no Player data. (server world)")
                         return 0
                 attachments = player.get("neoforge:attachments", {})
                 if not isinstance(attachments, nbtlib.Compound):
@@ -245,7 +245,6 @@ class Cleaner:
                 if not dry and count > 0:
                         _ = shutil.copy2(level_path, str(level_path) + ".bak")
                         write_nbt(level_path, data)
-
                 return count
 
         def clean_playerdata(self, world: Path, *, dry: bool = False) -> tuple[int, int]:

@@ -66,12 +66,6 @@ def process_dimension(region_path: Path, cleaner: Cleaner, progress: ProgressBar
                                                 buffer = io.BytesIO()
                                                 chunk.write(buffer)
                                                 modified[(chunk_x, chunk_z)] = buffer.getvalue()
-                        if modified and not dry:
-                                for chunk_x, chunk_z, raw in region.iterate_chunks():
-                                        if (chunk_x, chunk_z) not in modified:
-                                                modified[(chunk_x, chunk_z)] = raw
-                                region.write(modified)
-                                dimension_stats += file_stats
         
                         if modified and not dry:
                                 for chunk_x, chunk_z, raw in region.iterate_chunks():
