@@ -1,8 +1,3 @@
-# anvil.py
-# Derived from the "strip-mod" tool suite (Soleil Fenley, 2026).
-# Original: strip-mod/anvil.py — reused and extended for the oil-injector tool.
-# License: GPL-3.0
-
 import gzip
 import logging
 import struct
