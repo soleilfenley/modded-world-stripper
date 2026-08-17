@@ -132,7 +132,7 @@ def main() -> None:
         print(f"  Cleaning {total_files} region file(s)...")
         print(f"{'=' * 60}")
 
-        progress = ProgressBar(total_files)
+        progress = ProgressBar(total_files, "Cleaning")
         grand_total = ChunkStats()
         per_dimension: list[tuple[str, ChunkStats]] = []
 

@@ -9,12 +9,14 @@ class ProgressBar:
         current: int
         _active: bool
         _tty: bool
+        _prefix: str
 
-        def __init__(self, total: int) -> None:
+        def __init__(self, total: int, prefix: str) -> None:
                 self.total = total
                 self.current = 0
                 self._active = False
                 self._tty = sys.stdout.isatty()
+                self._prefix = prefix
                 if self._tty:
                         enable_ansi()
 
@@ -43,7 +45,7 @@ class ProgressBar:
                 filled = int(width * frac)
                 bar = "#" * filled + "-" * (width - filled)
 
-                line1 = self._truncate(f"  Cleaning: {label}", columns)
+                line1 = self._truncate(f"  {self._prefix} {label}", columns)
                 line2 = self._truncate(f"  [{bar}] {int(frac * 100):3d}%  ({counter})", columns)
 
                 prefix = "\r\x1b[1A" if self._active else ""
